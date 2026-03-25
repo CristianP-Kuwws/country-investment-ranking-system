@@ -1,0 +1,44 @@
+﻿@model SaveReturnRateViewModel
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewData["Title"] = "Return Rate Save";
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Tasa de Retorno</h1>
+    </div>
+</div>
+
+
+<div class="col-12 col-md-6 offset-md-3">
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h5 class="text-center">@(editMode ? "Editar Tasa de Retorno" : "Nueva Configuracion")</h5>
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="ReturnRate" asp-action="Save" method="POST">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="IdReturnRate" />
+
+                <div class="mb-3">
+                    <label asp-for="MinReturnRate" class="form-label">Tasa minima</label>
+                    <input class="form-control" asp-for="MinReturnRate" type="number" step="0.01" />
+                    <span asp-validation-for="MinReturnRate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaxReturnRate" class="form-label">Tasa maxima</label>
+                    <input class="form-control" asp-for="MaxReturnRate" type="number" step="0.01" />
+                    <span asp-validation-for="MaxReturnRate" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-outline-primary float-end">Guardar</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-warning float-end me-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

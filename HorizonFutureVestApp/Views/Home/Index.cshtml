@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var years = ViewBag.AvailableYears as List<int> ?? new List<int>();
+    var selectedYear = (int)(ViewBag.SelectedYear ?? DateTime.Now.Year);
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Ranking por pais basado en macroindicadores economicos</h1>
+    </div>
+</div>
+
+@* Mensajes de error *@
+@if (TempData["Error"] != null)
+{
+    var errorMessage = TempData["Error"].ToString();
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @errorMessage
+
+        @if (errorMessage.IndexOf("ajustar los pesos", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            <br />
+            <a asp-controller="MacroIndicator" asp-action="Index" class="alert-link">
+                Ir al mantenimiento de macroindicadores
+            </a>
+        }
+
+        @if (errorMessage.IndexOf("paises", StringComparison.OrdinalIgnoreCase) >= 0 &&
+               errorMessage.IndexOf("indicadores", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            <br />
+            <a asp-controller="Indicator" asp-action="Index" class="alert-link">
+                Ir al mantenimiento de indicadores por países
+            </a>
+        }
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+<div class="row mt-5">
+    <div class="col-12 col-md-6 offset-md-3">
+        <form asp-action="GetRanking" method="post">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    <h5 class="text-center">Obtener Ranking de Paises</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="selectedYear" class="form-label">Seleccione un Año</label>
+                        <select id="selectedYear" name="selectedYear" class="form-select">
+                            @foreach (var y in years.OrderByDescending(y => y))
+                            {
+                                <option value="@y" selected="@(y == selectedYear)">@y</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Obtener Ranking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

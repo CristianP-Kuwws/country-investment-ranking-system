@@ -1,0 +1,33 @@
+﻿@model DeleteMacroIndicatorViewModel
+@{
+    ViewData["Title"] = "Delete MacroIndicators";
+}
+
+<div class="col-12 col-md-6 offset-md-3">
+    <div class="card">
+        <div class="card-header bg-danger text-light">
+            <h4 class="text-center">
+                ¿Está seguro que desea eliminar este macroindicador?
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-warning text-center">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            <form asp-controller="MacroIndicator" asp-action="Delete" method="POST">
+                <input type="hidden" asp-for="IdMacroIndicator" />
+
+                <div class="d-flex justify-content-center">
+                    <a asp-controller="MacroIndicator" asp-action="Index" class="btn btn-outline-warning me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-outline-danger me-2">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

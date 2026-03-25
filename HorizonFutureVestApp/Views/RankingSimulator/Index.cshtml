@@ -1,0 +1,125 @@
+﻿@model List<SimulationMacroViewModel>
+@{
+    ViewData["Title"] = "Ranking Simulator Page";
+    var totalWeight = ViewBag.TotalWeight ?? 0m;
+    var canAddMore = ViewBag.CanAddMore ?? true;
+    var years = ViewBag.AvailableYears as List<int> ?? new List<int>();
+    var selectedYear = (int)(ViewBag.SelectedYear ?? DateTime.Now.Year);
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Simulacion de Ranking</h1>
+    </div>
+</div>
+
+@* Errores *@
+@if (TempData["Error"] != null)
+{
+    var errorMessage = TempData["Error"].ToString();
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @errorMessage
+
+        @* Errores logicos *@
+        @if (errorMessage.IndexOf("paises", StringComparison.OrdinalIgnoreCase) >= 0 &&
+       errorMessage.IndexOf("indicadores", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            <br />
+            <a asp-controller="Indicator" asp-action="Index" class="alert-link">
+                Ir al mantenimiento de indicadores por países
+            </a>
+        }
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Warning"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        @TempData["Warning"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        @if (canAddMore)
+        {
+            <a class="btn btn-outline-success" asp-action="Add">Agregar MacroIndicador</a>
+        }
+        else
+        {
+            <div class="alert alert-warning">Ya no se pueden agregar mas macroindicadores (peso = 1).</div>
+        }
+    </div>
+</div>
+
+<hr />
+
+<div class="row mt-2">
+    @if (!Model.Any())
+    {
+        <div class="text-center">
+            <h4 class="display-4">No existen MacroIndicadores en la Simulacion.</h4>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-12 col-md-3 mt-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">
+                            Peso: @item.Weight <br />
+                            ¿Mejor si es alto?: @(item.IsHighBetter ? "Sí" : "No")
+                        </p>
+                        <div class="mt-2">
+                            <a asp-action="Edit" asp-route-id="@item.IdMacroIndicator" class="btn btn-outline-warning me-2">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdMacroIndicator" class="btn btn-outline-danger">Borrar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if (Model.Any())
+{
+    <hr />
+    <div class="row mt-4">
+        <div class="col-12 col-md-6 offset-md-3">
+            <form asp-action="RunSimulation" asp-controller="RankingSimulator" method="post">
+                <div class="card">
+                    <div class="card-header bg-primary text-light">
+                        <h5 class="text-center">Ejecutar Simulación</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="selectedYear" class="form-label">Seleccione un Año</label>
+                            <select id="selectedYear" name="selectedYear" class="form-select">
+                                @foreach (var y in years.OrderByDescending(y => y))
+                                {
+                                    if (y == selectedYear)
+                                    {
+                                        <option value="@y" selected="selected">@y</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@y">@y</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-outline-success w-100">Simular Ranking</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

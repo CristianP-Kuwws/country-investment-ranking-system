@@ -1,0 +1,52 @@
+﻿@model List<MacroIndicatorViewModel>
+@{
+    ViewData["Title"] = "MacroIndicator Page";
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">MacroIndicadores</h1>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        <a class="btn btn-outline-success" asp-controller="MacroIndicator" asp-action="Create">Crear MacroIndicador</a>
+
+    </div>
+
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            <h4 class="display-4">No existen MacroIndicadores creados.</h4>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="row mt-4">
+                <div class="col-12 col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="card-subtitle">Cantidad de Indicadores: @item.IndicatorsQuantity</h6>
+                            <p class="card-text">
+                                Peso: @item.Weight <br />
+                                ¿Mejor si es alto? : @(item.IsHighBetter ? "Sí" : "No")
+                            </p>
+                            <div class="mt-2">
+                                <a class="btn btn-outline-danger float-end" asp-controller="MacroIndicator" asp-action="Delete" asp-route-id="@item.IdMacroIndicator">Borrar</a>
+                                <a class="btn btn-outline-warning float-end me-2" asp-controller="MacroIndicator" asp-action="Edit" asp-route-id="@item.IdMacroIndicator">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>

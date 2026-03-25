@@ -1,0 +1,84 @@
+﻿@model SaveIndicatorViewModel
+@{
+    bool editMode = ViewBag.EditMode ?? false;
+    ViewData["Title"] = "Indicator Save";
+}
+
+<div class="col-12 col-md-6 offset-md-3">
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h5 class="text-center">@(editMode ? "Editar Indicador" : "Nuevo Indicador")</h5>
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Indicator" asp-action="@(editMode ? "Edit" : "Create")" method="POST">
+                <input type="hidden" asp-for="IdIndicator" />
+
+                <div class="mb-3">
+                    <label asp-for="IdCountry" class="form-label">Pais</label>
+
+                    @if (editMode)
+                    {
+                        <input class="form-control" value="@Model.CountryName" disabled />
+                        <input type="hidden" asp-for="IdCountry" /> 
+                    }
+                    else
+                    {
+                        <select asp-for="IdCountry" class="form-select"
+                                asp-items="@(new SelectList(Model.Countries, "IdCountry", "Name", Model.IdCountry))">
+                            <option value="">-- Seleccionar Pais --</option>
+                        </select>
+                        <span asp-validation-for="IdCountry" class="text-danger"></span>
+                    }
+
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IdMacroIndicator" class="form-label">MacroIndicador</label>
+
+                    @if (editMode)
+                    {
+                        <input class="form-control" value="@Model.MacroIndicatorName" disabled />
+                        <input type="hidden" asp-for="IdMacroIndicator" />
+                    }
+                    else
+                    {
+                        <select asp-for="IdMacroIndicator" class="form-select"
+                                asp-items="@(new SelectList(Model.MacroIndicators, "IdMacroIndicator", "Name", Model.IdMacroIndicator))">
+                            <option value="">-- Seleccionar MacroIndicador --</option>
+                        </select>
+                        <span asp-validation-for="IdMacroIndicator" class="text-danger"></span>
+                    }
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label asp-for="Value" class="form-label">Valor</label>
+                    <input class="form-control" asp-for="Value" type="number" step="0.01" />
+                    <span asp-validation-for="Value" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Year" class="form-label">Año</label>
+                    @if (editMode)
+                    {
+                        <input class="form-control" asp-for="Year" type="number" disabled />
+                        <input type="hidden" asp-for="Year" />
+                    }
+                    else
+                    {
+                        <input class="form-control" asp-for="Year" type="number"
+                               min="1900" max="@DateTime.Now.Year" />
+                    }
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-outline-primary float-end">Guardar</button>
+                    <a asp-controller="Indicator" asp-action="Index" class="btn btn-outline-warning float-end me-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

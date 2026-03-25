@@ -1,0 +1,51 @@
+﻿@model List<CountryViewModel>
+@{
+    ViewData["Title"] = "Countries Page";
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Paises</h1>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-3">
+        <a class="btn btn-outline-success" asp-controller="Country" asp-action="Create">Crear Pais</a>
+
+    </div>
+
+</div>
+
+<div class="row mt-2">
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            <h4 class="display-4">No existen paises creados.</h4>
+        </div>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="row mt-4">
+                <div class="col-12 col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="card-subtitle">Cantidad de Indicadores: @item.IndicatorsQuantity</h6>
+                            <p class="card-text mt-2">
+                                @item.ISOCode
+                            </p>
+                            <div class="mt-2">
+                                <a class="btn btn-outline-danger float-end" asp-controller="Country" asp-action="Delete" asp-route-id="@item.IdCountry">Borrar</a>
+                                <a class="btn btn-outline-warning float-end me-2" asp-controller="Country" asp-action="Edit" asp-route-id="@item.IdCountry">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>

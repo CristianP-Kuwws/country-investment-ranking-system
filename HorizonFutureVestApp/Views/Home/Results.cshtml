@@ -1,0 +1,71 @@
+﻿@model Application.ViewModels.RankingSimulator.ResultsViewModels.RankingResultsViewModel
+@{
+    ViewData["Title"] = "Home Ranking Results";
+}
+
+<div class="row">
+    <div class="text-center">
+        <h1 class="display-4">Ranking de Paises (@Model.Year)</h1>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    var errorMessage = TempData["Error"].ToString();
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        @errorMessage
+
+        @if (errorMessage.Contains("ajustar los pesos"))
+        {
+            <br />
+            <a asp-controller="MacroIndicator" asp-action="Index" class="alert-link">
+                Ir al mantenimiento de macroindicadores
+            </a>
+        }
+        else if (errorMessage.Contains("No hay paises elegibles"))
+        {
+            <br />
+            <a asp-controller="Indicator" asp-action="Index" class="alert-link">
+                Ir al mantenimiento de indicadores por países
+            </a>
+        }
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Posicion</th>
+                <th>Pais</th>
+                <th>Codigo ISO</th>
+                <th>Scoring</th>
+                <th>Tasa de Retorno Estimada</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Rankings)
+            {
+                <tr>
+                    <td>@item.Position</td>
+                    <td>@item.CountryName</td>
+                    <td>@item.IsoCode</td>
+                    <td>@item.Scoring.ToString("F4")</td>
+                    <td>@item.EstimatedReturnRate.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                Volver Atras
+            </a>
+        </div>
+    </div>
+}
+
+
